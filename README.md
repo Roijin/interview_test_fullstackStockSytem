@@ -1,4 +1,4 @@
-# interview_test_fullstackStockSytem
+# Interview Test Fullstack Stock Sytem
 
 This fullstack project was done using Springboot(java) and React(js)
 
