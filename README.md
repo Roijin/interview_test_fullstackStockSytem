@@ -8,11 +8,16 @@ stocksytem contains the backend/API component
 Springboot uses maven 
 React uses npm
 
+
 the UI was built with material UI
 
 The database used is mysql running localhost port 8080
 
+
+
 Steps needed to run the project:
+
+the db.sql can be used to get an initialized database
 
 ensure that the java project runs in java 17 SDK
 
