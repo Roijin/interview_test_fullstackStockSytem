@@ -8,47 +8,31 @@ import RFTextField from '../modules/form/RFTextField';
 import FormButton from '../modules/form/FormButton';
 import {useNavigate} from "react-router-dom";
 
-function MatchPassword(email, password, obj){
-  var match = false;
-  var currentUser;
-  for (var i in obj){
-    if (obj[i].email == email){
-      if(obj[i].password == password){
-        match = true;
-        currentUser = obj[i].id;
-      }
-    }
-  }
-  return [match, currentUser];
-}
 
   
 function SignIn(){
     const [sent,setSent] = React.useState(false);
-    const [users,setUsers] = React.useState();
     
     let formData = {};
     let navigate = useNavigate();
-    var searchResults = [];
-    var state;
     var currentUser;
     
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     
     const onSubmit = async (values) => {
-      
       await sleep(300);
-      fetch("http://localhost:8080/user/getAll")
+      fetch("http://localhost:8080/user/get-email/"+values.email)
         .then(res=>res.json())
         .then((result)=>{
-            setUsers(result);
-            searchResults = MatchPassword(values.email,values.password,result);
-            state = searchResults[0];
-            currentUser = searchResults[1];
-            if (state == true){
-            console.log(currentUser);
-            navigate("/Stock",{state:{user_id:currentUser}});
-            }
+            console.log(result.id);
+            currentUser = result.id;
+            if (values.password === result.password) {
+              if (currentUser===1){
+                navigate("/Admin",{state:{user_id:currentUser}});
+                }
+              else{navigate("/Stock",{state:{user_id:currentUser}});
+              }
+              }
         })
     };
   

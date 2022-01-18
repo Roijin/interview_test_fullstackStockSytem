@@ -5,6 +5,7 @@ import SignIn from "./pages/SignIn"
 import SignUp from "./pages/SignUp"
 import Stock from "./pages/Stock"
 import Cart from "./pages/Cart"
+import Admin from "./pages/Admin"
 import HeaderBar from "./modules/views/Header"
 import AppFooter from "./modules/views/Footer"
 import withRoot from './modules/withRoot';
@@ -20,6 +21,7 @@ function App(){
                     <Route path="SignUp" element={<SignUp/>} />
                     <Route path="Stock" element={<Stock/>} />
                     <Route path="Cart" element={<Cart/>} />
+                    <Route path="Admin" element={<Admin/>} />
                 </Routes>
             </Router>
         <AppFooter/>  

@@ -2,12 +2,10 @@ import * as React from 'react';
 import {useState,useEffect} from 'react';
 import { DataGrid,} from '@mui/x-data-grid';
 import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import {useLocation} from 'react-router-dom';
-import { Tooltip } from '@material-ui/core';
 import {useNavigate} from "react-router-dom";
-import { Button, Grid, Typography, Box } from "@material-ui/core";
 
 
 const CartPage = (props) =>{
@@ -16,28 +14,35 @@ const CartPage = (props) =>{
     const listStyle={padding:'10px 10px', width:550,margin:"40px auto", height:450,position:"relative"}
     const [items,setItems] =useState([]);
     const [selection,setSelection] =useState([]);
-    var currentUserItems=[];
 
     
     const { disabled, mounted, ...others } = props;
     var currentUser = location.state.user_id;
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     useEffect(() =>{
-        fetch("http://localhost:8080/purchase/getAll")
+        fetch("http://localhost:8080/purchase/get-user/"+currentUser)
         .then(res=>res.json())
         .then((result)=>{
-            var filteredResult = result.filter(item =>item.user_id === currentUser);
-            setItems(filteredResult);
+            setItems(result);
         })
     },[])
     
-    currentUserItems = items;
 
     const handleDelete = (clickedItem) => {
         setItems(items.filter((item) => item.id !== clickedItem.id));
-        console.log(clickedItem.id);
+        fetch("http://localhost:8080/purchase/delete/"+ clickedItem.id, {method:'DELETE'})
+        .then(()=>console.log(clickedItem.id))
+        
       };
+
+    const handleChange = (clickedItem) => {
+      console.log(clickedItem.row.quantity);
+      fetch("http://localhost:8080/purchase/update/"+ clickedItem.id, {
+        method:'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({'quantity': clickedItem.row.quantity})
+      })
+    }
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 50 },
@@ -64,16 +69,25 @@ const CartPage = (props) =>{
             field: 'date',
             headerName: 'TimeStamp',
             type: 'dateTime',
-            width: 120,
+            width: 80,
           },
           {
             field: "action",
-            headerName: "Action",
-            width: 80,
+            headerName: "Actions",
+            width: 150,
       
             renderCell: (id) => (
               <>
                      
+                <IconButton
+                  onClick={() => handleChange(id)}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                >
+                  <ChangeCircleIcon fontSize="large" />
+                </IconButton>
+
                 <IconButton
                   onClick={() => handleDelete(id)}
                   variant="contained"
